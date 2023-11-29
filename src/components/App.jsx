@@ -1,21 +1,50 @@
-import React from "react";
-import Heading from "./Header";
-import Note from "./Note";
+import React, {useState} from "react";
+import Header from "./Header";
 import Footer from "./Footer";
-import notes from "../notes";
-
+import Note from "./Note";
+import CreateArea from "./CreateArea";
 
 function App() {
-  return(
+
+  const [noteDetails, setNoteDetails] = useState({
+    title: "",
+    content: ""
+  })
+
+  function addNote (event) {
+    
+    console.log(event.target);
+    const { value, name } = event.target;
+
+    setNoteDetails((prevValue) => {
+      if (name === "title") {
+        return({
+          title: value,
+          content: prevValue.content
+        })
+      } else {
+        return ({
+          title: prevValue.title,
+          content: value
+        })
+      }
+    }) 
+
+  }
+
+  return (
     <div>
-      <Heading />
-      {notes.map((note) => (
-        <Note 
-          key={note.id}
-          title={note.title}
-          content={note.content}
+      <Header />
+      <CreateArea 
+        onSubmit={addNote}
+        title={noteDetails.title}
+        content={noteDetails.content}
+      />
+      <Note 
+        key={1} 
+        title={noteDetails.title} 
+        content={noteDetails.content} 
         />
-      ))}
       <Footer />
     </div>
   );
