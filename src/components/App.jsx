@@ -11,9 +11,29 @@ function App() {
     content: ""
   })
 
+  const [notesArray, setToArray] = useState([]);
+
+  function addToArray (event) {
+    event.preventDefault();
+    setToArray((prevNotes) => {
+      return [...prevNotes, noteDetails]
+    })
+    setNoteDetails({
+      title: "",
+      content: ""
+    });
+  }
+
+  function deleteNote (id) {
+    console.log("Deleting note");
+    setToArray ((prevItems) => {
+      return prevItems.filter((item, index) => {
+        return index !== id;
+      })
+    })
+  }
+
   function addNote (event) {
-    
-    console.log(event.target);
     const { value, name } = event.target;
 
     setNoteDetails((prevValue) => {
@@ -36,15 +56,26 @@ function App() {
     <div>
       <Header />
       <CreateArea 
-        onSubmit={addNote}
+        onChange={addNote}
         title={noteDetails.title}
         content={noteDetails.content}
+        clickToAdd={addToArray}
       />
-      <Note 
-        key={1} 
-        title={noteDetails.title} 
-        content={noteDetails.content} 
-        />
+      {
+        notesArray.map((eachNote, index) => {
+        return (
+          <Note 
+            key={index}
+            id={index} 
+            title={eachNote.title} 
+            content={eachNote.content}
+            delete={deleteNote} 
+          />
+        );
+
+        })
+      }
+
       <Footer />
     </div>
   );
